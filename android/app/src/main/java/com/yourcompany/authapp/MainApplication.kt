@@ -1,4 +1,4 @@
-package com.anonymous.AuthApp
+package com.yourcompany.authapp
 
 import android.app.Application
 import android.content.res.Configuration
