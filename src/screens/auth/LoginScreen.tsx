@@ -1,24 +1,37 @@
 // src/screens/auth/LoginScreen.tsx
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { Button, TextInput, HelperText } from "react-native-paper";
+import { Button, TextInput, HelperText, IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DismissKeyboard from "../../components/common/DismissKeyboard";
 import { colors } from "../../theme/colors";
 import { loginSchema, type LoginFormData } from "../../validation/auth.schema";
+import { useAuthStore } from "../../store/auth.store";
 import type { AuthNavigationProp } from "../../types/navigation.types";
 
+/**
+ * LoginScreen Component
+ * Handles user authentication through email and password
+ */
 const LoginScreen = () => {
+  // Local state for password visibility
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
   // Navigation setup
   const navigation = useNavigation<AuthNavigationProp>();
 
-  // Form setup with React Hook Form
+  // Auth store values
+  const login = useAuthStore((state) => state.login);
+  const setLoading = useAuthStore((state) => state.setLoading);
+  const isLoading = useAuthStore((state) => state.isLoading);
+
+  // Form setup
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -27,13 +40,29 @@ const LoginScreen = () => {
     },
   });
 
-  // Form submission handler
+  /**
+   * Handle form submission
+   * @param data - Form data containing email and password
+   */
   const onSubmit = async (data: LoginFormData) => {
     try {
-      console.log("Form submitted:", data);
-      // add actual login logic here later
+      console.log("Login attempt:", { email: data.email });
+      setLoading(true);
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const mockUser = {
+        id: "1",
+        email: data.email,
+      };
+
+      console.log("Login successful:", { email: data.email });
+      login(mockUser, "mock-jwt-token");
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Login failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,6 +86,8 @@ const LoginScreen = () => {
                 autoCapitalize="none"
                 theme={{ colors: { primary: colors.primary } }}
                 error={!!errors.email}
+                disabled={isLoading}
+                left={<TextInput.Icon icon="email" />}
               />
               <HelperText type="error" visible={!!errors.email}>
                 {errors.email?.message}
@@ -77,10 +108,18 @@ const LoginScreen = () => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                secureTextEntry
+                secureTextEntry={!passwordVisible}
                 style={styles.input}
                 theme={{ colors: { primary: colors.primary } }}
                 error={!!errors.password}
+                disabled={isLoading}
+                left={<TextInput.Icon icon="lock" />}
+                right={
+                  <TextInput.Icon
+                    icon={passwordVisible ? "eye-off" : "eye"}
+                    onPress={() => setPasswordVisible(!passwordVisible)}
+                  />
+                }
               />
               <HelperText type="error" visible={!!errors.password}>
                 {errors.password?.message}
@@ -95,17 +134,18 @@ const LoginScreen = () => {
           style={styles.button}
           buttonColor={colors.primary}
           onPress={handleSubmit(onSubmit)}
-          loading={isSubmitting}
-          disabled={isSubmitting}
+          loading={isLoading}
+          disabled={isLoading}
         >
-          {isSubmitting ? "Logging in..." : "Login"}
+          {isLoading ? "Logging in..." : "Login"}
         </Button>
 
-        {/* Signup Navigation Button */}
+        {/* Signup Navigation */}
         <Button
           mode="text"
           onPress={() => navigation.navigate("Signup")}
           textColor={colors.secondary}
+          disabled={isLoading}
         >
           Need an account? Sign up
         </Button>
