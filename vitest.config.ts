@@ -1,10 +1,14 @@
-// vitest.config.ts
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
     globals: true,
-    environment: "node",
-    setupFiles: ["./src/test/setup.ts"],
+    environment: "jsdom",
+    setupFiles: ["./src/tests/setup.ts"],
+    server: {
+      deps: {
+        inline: ["react-native", "@react-native-async-storage/async-storage"],
+      },
+    },
   },
 });

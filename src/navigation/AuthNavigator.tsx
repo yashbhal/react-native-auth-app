@@ -1,10 +1,11 @@
 // src/navigation/AuthNavigator.tsx
-import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
-import LoginScreen from "../screens/auth/LoginScreen";
-import SignupScreen from "../screens/auth/SignupScreen";
-import { colors } from "../theme/colors";
+//Added comments to to test this
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import LoginScreen from '../screens/auth/LoginScreen';
+import SignupScreen from '../screens/auth/SignupScreen';
+import { colors } from '../theme/colors';
 
 const AuthStack = createNativeStackNavigator();
 

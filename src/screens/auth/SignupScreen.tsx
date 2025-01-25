@@ -1,75 +1,55 @@
 // src/screens/auth/SignupScreen.tsx
-import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { Button, TextInput, HelperText } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import DismissKeyboard from "../../components/common/DismissKeyboard";
-import { colors } from "../../theme/colors";
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Button, TextInput, HelperText } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import DismissKeyboard from '../../components/common/DismissKeyboard';
+import { colors } from '../../theme/colors';
 import {
   signupSchema,
   type SignupFormData,
-} from "../../validation/auth.schema";
-import { useAuthStore } from "../../store/auth.store";
-import type { AuthNavigationProp } from "../../types/navigation.types";
+} from '../../validation/auth.schema';
+import { useAuthStore } from '../../store/auth.store';
+import type { AuthNavigationProp } from '../../types/navigation.types';
 
-/**
- * SignupScreen Component
- * Handles new user registration with email and password
- */
 const SignupScreen = () => {
-  // Local state for password visibility
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-
-  // Navigation setup
   const navigation = useNavigation<AuthNavigationProp>();
 
-  // Auth store values
   const login = useAuthStore((state) => state.login);
   const setLoading = useAuthStore((state) => state.setLoading);
   const isLoading = useAuthStore((state) => state.isLoading);
 
-  // Form setup
   const {
     control,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      email: "",
-      password: "",
-      confirmPassword: "",
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
   });
 
-  // Watch password for real-time validation
-  const password = watch("password");
-
-  /**
-   * Handle form submission
-   * @param data - Form data containing email, password, and confirmPassword
-   */
   const onSubmit = async (data: SignupFormData) => {
     try {
-      console.log("Signup attempt:", { email: data.email });
       setLoading(true);
-
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const mockUser = {
-        id: Date.now().toString(),
-        email: data.email,
-      };
-
-      console.log("Signup successful:", { email: data.email });
-      login(mockUser, "mock-jwt-token-" + Date.now());
+      login(
+        {
+          id: Date.now().toString(),
+          email: data.email,
+        },
+        'mock-jwt-token-' + Date.now(),
+      );
     } catch (error) {
-      console.error("Signup failed:", error);
+      if (error instanceof Error) {
+        // Error handling will be implemented later
+      }
     } finally {
       setLoading(false);
     }
@@ -78,7 +58,6 @@ const SignupScreen = () => {
   return (
     <DismissKeyboard>
       <View style={styles.container}>
-        {/* Email Input */}
         <Controller
           control={control}
           name="email"
@@ -105,7 +84,6 @@ const SignupScreen = () => {
           )}
         />
 
-        {/* Password Input */}
         <Controller
           control={control}
           name="password"
@@ -117,18 +95,12 @@ const SignupScreen = () => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                secureTextEntry={!passwordVisible}
+                secureTextEntry
                 style={styles.input}
                 theme={{ colors: { primary: colors.primary } }}
                 error={!!errors.password}
                 disabled={isLoading}
                 left={<TextInput.Icon icon="lock" />}
-                right={
-                  <TextInput.Icon
-                    icon={passwordVisible ? "eye-off" : "eye"}
-                    onPress={() => setPasswordVisible(!passwordVisible)}
-                  />
-                }
               />
               <HelperText type="error" visible={!!errors.password}>
                 {errors.password?.message}
@@ -137,7 +109,6 @@ const SignupScreen = () => {
           )}
         />
 
-        {/* Confirm Password Input */}
         <Controller
           control={control}
           name="confirmPassword"
@@ -149,20 +120,12 @@ const SignupScreen = () => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                secureTextEntry={!confirmPasswordVisible}
+                secureTextEntry
                 style={styles.input}
                 theme={{ colors: { primary: colors.primary } }}
                 error={!!errors.confirmPassword}
                 disabled={isLoading}
                 left={<TextInput.Icon icon="lock-check" />}
-                right={
-                  <TextInput.Icon
-                    icon={confirmPasswordVisible ? "eye-off" : "eye"}
-                    onPress={() =>
-                      setConfirmPasswordVisible(!confirmPasswordVisible)
-                    }
-                  />
-                }
               />
               <HelperText type="error" visible={!!errors.confirmPassword}>
                 {errors.confirmPassword?.message}
@@ -171,7 +134,6 @@ const SignupScreen = () => {
           )}
         />
 
-        {/* Signup Button */}
         <Button
           mode="contained"
           style={styles.button}
@@ -180,13 +142,12 @@ const SignupScreen = () => {
           loading={isLoading}
           disabled={isLoading}
         >
-          {isLoading ? "Creating Account..." : "Sign Up"}
+          {isLoading ? 'Creating Account...' : 'Sign Up'}
         </Button>
 
-        {/* Login Navigation */}
         <Button
           mode="text"
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => navigation.navigate('Login')}
           textColor={colors.secondary}
           disabled={isLoading}
         >
@@ -201,7 +162,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    justifyContent: "center",
+    justifyContent: 'center',
     backgroundColor: colors.background,
   },
   input: {
