@@ -13,25 +13,77 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          cache: 'npm'
-      - uses: actions/setup-java@v3
+          node-version: "18"
+          cache: "npm"
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: '11'
-      - run: npm install --legacy-peer-deps
-      - run: cd android && ./gradlew assembleRelease
+          distribution: "zulu"
+          java-version: "11"
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Prebuild Android
+        run: npx expo prebuild --platform android
+
+      - name: Build Android
+        run: cd android && ./gradlew assembleRelease
+
+      - name: Upload Android Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: android/app/build/outputs/apk/release/
 
   build-ios:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          cache: 'npm'
-      - run: npm install --legacy-peer-deps
-      - run: cd ios && pod install
-      - run: xcodebuild -workspace ios/*.xcworkspace -scheme "AuthApp" -configuration Release
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Prebuild iOS
+        run: npx expo prebuild --platform ios
+
+      - name: Install Pods
+        run: cd ios && pod install
+
+      - name: Build iOS
+        run: |
+          cd ios
+          xcodebuild -workspace AuthApp.xcworkspace \
+            -scheme AuthApp \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -derivedDataPath build
+
+      - name: Upload iOS Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-build
+          path: ios/build/
