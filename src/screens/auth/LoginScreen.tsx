@@ -1,15 +1,14 @@
-// src/screens/auth/LoginScreen.tsx
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Button, TextInput, HelperText } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import DismissKeyboard from '../../components/common/DismissKeyboard';
-import { colors } from '../../theme/colors';
-import { loginSchema, type LoginFormData } from '../../validation/auth.schema';
-import { useAuthStore } from '../../store/auth.store';
-import type { AuthNavigationProp } from '../../types/navigation.types';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { Button, TextInput, HelperText } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import DismissKeyboard from "../../components/common/DismissKeyboard";
+import { colors } from "../../theme/colors";
+import { loginSchema, type LoginFormData } from "../../validation/auth.schema";
+import { useAuthStore } from "../../store/auth.store";
+import type { AuthNavigationProp } from "../../types/navigation.types";
 
 const LoginScreen = () => {
   const navigation = useNavigation<AuthNavigationProp>();
@@ -25,8 +24,8 @@ const LoginScreen = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
@@ -37,10 +36,10 @@ const LoginScreen = () => {
 
       login(
         {
-          id: '1',
+          id: "1",
           email: data.email,
         },
-        'mock-jwt-token',
+        "mock-jwt-token"
       );
     } catch (error) {
       if (error instanceof Error) {
@@ -113,12 +112,12 @@ const LoginScreen = () => {
           loading={isLoading}
           disabled={isLoading}
         >
-          {isLoading ? 'Logging in...' : 'Login'}
+          {isLoading ? "Logging in..." : "Login"}
         </Button>
 
         <Button
           mode="text"
-          onPress={() => navigation.navigate('Signup')}
+          onPress={() => navigation.navigate("Signup")}
           textColor={colors.secondary}
           disabled={isLoading}
         >
@@ -133,7 +132,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    justifyContent: 'center',
+    justifyContent: "center",
     backgroundColor: colors.background,
   },
   input: {
