@@ -1,10 +1,14 @@
-import { describe, it, expect } from "vitest";
-import { useAuthStore } from "../store/auth.store";
+// src/types/auth.types.ts
+export interface AuthUser {
+  email: string;
+  id: string;
+}
 
-describe("Auth Store", () => {
-  it("should initialize with default values", () => {
-    const state = useAuthStore.getState();
-    expect(state.isAuthenticated).toBe(false);
-    expect(state.user).toBeNull();
-  });
-});
+export interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+export interface SignupFormData extends LoginFormData {
+  confirmPassword: string;
+}

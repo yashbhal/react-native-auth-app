@@ -1,23 +1,27 @@
+// src/navigation/AuthNavigator.tsx
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SignupScreen from "../screens/auth/SignupScreen";
-import type { AuthStackParamList } from "../types/navigation.types";
+import { colors } from "../theme/colors";
 
-const Stack = createNativeStackNavigator<AuthStackParamList>();
+const AuthStack = createNativeStackNavigator();
 
 const AuthNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator
+      <AuthStack.Navigator
         screenOptions={{
           headerShown: false,
+          contentStyle: {
+            backgroundColor: colors.background,
+          },
         }}
       >
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-      </Stack.Navigator>
+        <AuthStack.Screen name="Login" component={LoginScreen} />
+        <AuthStack.Screen name="Signup" component={SignupScreen} />
+      </AuthStack.Navigator>
     </NavigationContainer>
   );
 };
