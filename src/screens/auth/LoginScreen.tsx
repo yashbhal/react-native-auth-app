@@ -31,7 +31,7 @@ const LoginScreen = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       console.log("Form submitted:", data);
-      // We'll add actual login logic here later
+      // add actual login logic here later
     } catch (error) {
       console.error("Login error:", error);
     }
