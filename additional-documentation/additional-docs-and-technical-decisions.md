@@ -1,3 +1,7 @@
+# Additional Documentation and Technical Decisions
+
+Some additional documentation on how things work, and explanations of technical decisions.
+
 ### Theme Configuration (src/theme/index.tsx)
 
 - Centralizes all theming configuration, provides consistent styling
