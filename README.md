@@ -1,6 +1,6 @@
 # React Native Auth App
 
-A simple React Native authentication app built with Expo, featuring a clean UI and modern development practices.
+A simple React Native authentication app built with Expo.
 
 ## Features
 
