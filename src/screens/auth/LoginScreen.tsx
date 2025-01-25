@@ -1,7 +1,6 @@
-// src/screens/auth/LoginScreen.tsx
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Button, TextInput, HelperText, IconButton } from "react-native-paper";
+import { Button, TextInput, HelperText } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,23 +10,13 @@ import { loginSchema, type LoginFormData } from "../../validation/auth.schema";
 import { useAuthStore } from "../../store/auth.store";
 import type { AuthNavigationProp } from "../../types/navigation.types";
 
-/**
- * LoginScreen Component
- * Handles user authentication through email and password
- */
 const LoginScreen = () => {
-  // Local state for password visibility
-  const [passwordVisible, setPasswordVisible] = useState(false);
-
-  // Navigation setup
   const navigation = useNavigation<AuthNavigationProp>();
 
-  // Auth store values
   const login = useAuthStore((state) => state.login);
   const setLoading = useAuthStore((state) => state.setLoading);
   const isLoading = useAuthStore((state) => state.isLoading);
 
-  // Form setup
   const {
     control,
     handleSubmit,
@@ -40,27 +29,22 @@ const LoginScreen = () => {
     },
   });
 
-  /**
-   * Handle form submission
-   * @param data - Form data containing email and password
-   */
   const onSubmit = async (data: LoginFormData) => {
     try {
-      console.log("Login attempt:", { email: data.email });
       setLoading(true);
-
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const mockUser = {
-        id: "1",
-        email: data.email,
-      };
-
-      console.log("Login successful:", { email: data.email });
-      login(mockUser, "mock-jwt-token");
+      login(
+        {
+          id: "1",
+          email: data.email,
+        },
+        "mock-jwt-token"
+      );
     } catch (error) {
-      console.error("Login failed:", error);
+      if (error instanceof Error) {
+        // Error handling will be implemented later
+      }
     } finally {
       setLoading(false);
     }
@@ -69,7 +53,6 @@ const LoginScreen = () => {
   return (
     <DismissKeyboard>
       <View style={styles.container}>
-        {/* Email Input */}
         <Controller
           control={control}
           name="email"
@@ -96,7 +79,6 @@ const LoginScreen = () => {
           )}
         />
 
-        {/* Password Input */}
         <Controller
           control={control}
           name="password"
@@ -108,18 +90,12 @@ const LoginScreen = () => {
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                secureTextEntry={!passwordVisible}
+                secureTextEntry
                 style={styles.input}
                 theme={{ colors: { primary: colors.primary } }}
                 error={!!errors.password}
                 disabled={isLoading}
                 left={<TextInput.Icon icon="lock" />}
-                right={
-                  <TextInput.Icon
-                    icon={passwordVisible ? "eye-off" : "eye"}
-                    onPress={() => setPasswordVisible(!passwordVisible)}
-                  />
-                }
               />
               <HelperText type="error" visible={!!errors.password}>
                 {errors.password?.message}
@@ -128,7 +104,6 @@ const LoginScreen = () => {
           )}
         />
 
-        {/* Login Button */}
         <Button
           mode="contained"
           style={styles.button}
@@ -140,7 +115,6 @@ const LoginScreen = () => {
           {isLoading ? "Logging in..." : "Login"}
         </Button>
 
-        {/* Signup Navigation */}
         <Button
           mode="text"
           onPress={() => navigation.navigate("Signup")}

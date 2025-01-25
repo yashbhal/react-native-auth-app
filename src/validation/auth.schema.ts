@@ -1,15 +1,19 @@
-// src/validation/auth.schema.ts
-import * as z from "zod";
+import { z } from "zod";
+
+const emailSchema = z
+  .string()
+  .min(1, "Email is required")
+  .email("Invalid email address");
+
+const passwordSchema = z
+  .string()
+  .min(1, "Password is required")
+  .min(8, "Password must be at least 8 characters");
 
 export const loginSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email address"),
-  password: z
-    .string()
-    .min(1, "Password is required")
-    .min(8, "Password must be at least 8 characters"),
+  email: emailSchema,
+  password: passwordSchema,
 });
-// Creates a TypeScript type from the schema
-export type LoginFormData = z.infer<typeof loginSchema>;
 
 export const signupSchema = z
   .object({
@@ -24,8 +28,9 @@ export const signupSchema = z
     confirmPassword: z.string().min(1, "Please confirm your password"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
     path: ["confirmPassword"],
+    message: "Passwords do not match",
   });
 
+export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
