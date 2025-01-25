@@ -1,6 +1,5 @@
-// App.tsx
 import React from "react";
-import { PaperProvider } from "react-native-paper";
+import { Provider as PaperProvider } from "react-native-paper";
 import AuthNavigator from "./src/navigation/AuthNavigator";
 
 export default function App() {

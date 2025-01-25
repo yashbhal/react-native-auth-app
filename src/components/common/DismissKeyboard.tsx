@@ -1,14 +1,25 @@
-// src/components/common/DismissKeyboard.tsx
 import React from "react";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
-import type { PropsWithChildren } from "react";
+import {
+  Keyboard,
+  TouchableWithoutFeedback,
+  View,
+  StyleSheet,
+} from "react-native";
 
-type DismissKeyboardProps = PropsWithChildren<{}>;
+interface Props {
+  children: React.ReactNode;
+}
 
-const DismissKeyboard = ({ children }: DismissKeyboardProps) => (
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    <View style={{ flex: 1 }}>{children}</View>
+const DismissKeyboard: React.FC<Props> = ({ children }) => (
+  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <View style={styles.container}>{children}</View>
   </TouchableWithoutFeedback>
 );
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default DismissKeyboard;
