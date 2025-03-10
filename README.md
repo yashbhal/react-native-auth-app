@@ -229,7 +229,3 @@ cd ..
 
 MIT
 
-
-## License
-
-MIT
